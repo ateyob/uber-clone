@@ -15,24 +15,26 @@ import { selectTravelTimeInformation } from "../slices/navSlice";
 
 const data = [
   {
-    id: "Uber-X-123",
-    title: "Uber-X",
+    id: "Economy-123",
+    title: "Economy",
     multiplier: 1,
     image: "https://links.papareact.com/3pn",
   },
   {
-    id: "Uber-XL-456",
-    title: "Uber-XL",
+    id: "Mini-Van-456",
+    title: "Mini-Van",
     multiplier: 1.2,
     image: "https://links.papareact.com/5w8",
   },
   {
-    id: "Uber-LUX-789",
-    title: "Uber-LUX",
+    id: "Luxury-789",
+    title: "Luxury",
     multiplier: 1.75,
     image: "https://links.papareact.com/7pf",
   },
 ];
+
+const SURGE_CHARGE_RATE = 30;
 
 const RideOptionCard = () => {
   const navigation = useNavigation();
@@ -49,7 +51,7 @@ const RideOptionCard = () => {
           <Icon name="chevron-left" type="fontawesome" />
         </TouchableOpacity>
         <Text style={tw`text-center py-5 text-xl`}>
-          Select a Ride - {travelTimeInformation?.distance.text}
+          Select a Ride - {travelTimeInformation?.distance?.text}
         </Text>
       </View>
 
@@ -74,14 +76,24 @@ const RideOptionCard = () => {
 
             <View style={tw`-ml-6`}>
               <Text style={tw`text-xl font-semibold`}>{title}</Text>
-              <Text>{travelTimeInformation?.duration.text}</Text>
+              <Text>{travelTimeInformation?.duration?.text}</Text>
             </View>
-            <Text style={tw`text-xl`}>99 ETB</Text>
+            <Text style={tw`text-xl`}>
+              {new Intl.NumberFormat("en-et", {
+                style: "currency",
+                currency: "ETB",
+              }).format(
+                (travelTimeInformation?.duration.value *
+                  SURGE_CHARGE_RATE *
+                  multiplier) /
+                  100
+              )}
+            </Text>
           </TouchableOpacity>
         )}
       />
 
-      <View>
+      <View style={tw`mt-auto border-gray-200`}>
         <TouchableOpacity
           disabled={!selected}
           style={tw`bg-black py-3 m-3 ${!selected && "bg-gray-300"}`}
